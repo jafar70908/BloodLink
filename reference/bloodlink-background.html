@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodLink | Premium Animated Background</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet">
+    <style>
+        /* 
+           BLOODLINK COLOR SYSTEM
+           ----------------------
+           Base: #120709 | Crimson: #C8102E | Accent: #E5243B | Wine: #5A0A18
+           Rose: #FFD9DE | Coral: #FF6B6B | Teal: #0E9F8E
+        */
+        :root {
+            --bg-base: #120709;
+            --crimson: #C8102E;
+            --accent: #E5243B;
+            --wine: #5A0A18;
+            --rose: #FFD9DE;
+            --coral: #FF6B6B;
+            --text-heading: #FFF9F7;
+            --text-body: rgba(255, 249, 247, 0.72);
+            --teal: #0E9F8E;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background-color: var(--bg-base);
+            color: var(--text-body);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Sora', sans-serif;
+            color: var(--text-heading);
+        }
+
+        /* COMPONENT: Background Wrapper */
+        #bloodlink-background {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-color: var(--bg-base);
+            overflow: hidden;
+        }
+
+        /* LAYER 1: Base Gradient & Aurora Blooms */
+        .aurora-bloom {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            mix-blend-mode: screen;
+            opacity: 0.25;
+            pointer-events: none;
+            transition: transform 0.5s ease-out;
+        }
+
+        .aurora-1 { width: 80vw; height: 80vw; top: -20%; left: -10%; background: radial-gradient(circle, var(--crimson) 0%, transparent 70%); animation: drift 45s infinite alternate ease-in-out; }
+        .aurora-2 { width: 70vw; height: 70vw; bottom: -10%; right: -5%; background: radial-gradient(circle, var(--wine) 0%, transparent 70%); animation: drift 60s infinite alternate-reverse ease-in-out; }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 5%) scale(1.1); }
+        }
+
+        /* LAYER 2: Vein Ribbons (SVG) */
+        .vein-container {
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            filter: blur(40px);
+        }
+        
+        .vein-ribbon {
+            position: absolute;
+            width: 150%;
+            height: 200px;
+            background: linear-gradient(90deg, transparent, var(--crimson), var(--rose), transparent);
+            animation: vein-flow 30s linear infinite;
+        }
+
+        @keyframes vein-flow {
+            from { transform: translateX(-100%) skewY(-5deg); }
+            to { transform: translateX(100%) skewY(-5deg); }
+        }
+
+        /* LAYER 4: ECG Pulse Line */
+        .ecg-container {
+            position: absolute;
+            bottom: 25%;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            opacity: 0.3;
+        }
+
+        #ecg-line {
+            stroke: var(--accent);
+            stroke-width: 1.5;
+            fill: none;
+            filter: drop-shadow(0 0 8px var(--accent));
+        }
+
+        .pulse-marker {
+            fill: var(--rose);
+            filter: blur(4px);
+        }
+
+        /* LAYER 3: Pulsing Heart */
+        .heart-container {
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .heart-svg {
+            fill: none;
+            stroke: var(--crimson);
+            stroke-width: 0.8;
+            opacity: 0.12;
+            filter: drop-shadow(0 0 12px var(--crimson));
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+
+        .heart-pulse .heart-svg {
+            opacity: 0.32;
+            transform: scale(1.12);
+            stroke: var(--accent);
+            filter: drop-shadow(0 0 22px var(--accent));
+        }
+
+        /* LAYER 5: Overlays */
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 40%, rgba(18, 7, 9, 0.7) 100%);
+        }
+
+        .grain {
+            position: absolute;
+            inset: 0;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Variant Controls */
+        [data-variant="aurora"] canvas, [data-variant="aurora"] .ecg-container, [data-variant="aurora"] .heart-container { display: none !important; }
+        [data-variant="minimal"] canvas, [data-variant="minimal"] .vein-container, [data-variant="minimal"] .aurora-bloom, [data-variant="minimal"] .heart-container { display: none !important; }
+
+        /* Reduced Motion Fallback */
+        @media (prefers-reduced-motion: reduce) {
+            .aurora-bloom, .vein-ribbon, #ecg-line, .heart-svg { animation: none !important; transition: none !important; }
+        }
+
+        /* Demo Hero Elements */
+        .glass-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+        }
+
+        .btn-primary {
+            background: var(--crimson);
+            box-shadow: 0 0 20px rgba(200, 16, 46, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent);
+            box-shadow: 0 0 30px rgba(200, 16, 46, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-glass {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen relative flex flex-col" data-sd-id="1">
+        
+        <!-- BACKGROUND COMPONENT START -->
+        <!-- To use: Drop this div at the top of your body, set position relative on content -->
+        <div id="bloodlink-background" data-variant="bloodstream" data-sd-id="2">
+            <div class="aurora-bloom aurora-1" data-sd-id="3"></div>
+            <div class="aurora-bloom aurora-2" data-sd-id="4"></div>
+            
+            <div class="vein-container" data-sd-id="5">
+                <div class="vein-ribbon" style="top: 20%; animation-delay: -5s; opacity: 0.6;" data-sd-id="6"></div>
+                <div class="vein-ribbon" style="top: 50%; animation-delay: -15s; opacity: 0.4;" data-sd-id="7"></div>
+                <div class="vein-ribbon" style="top: 80%; animation-delay: -2s; opacity: 0.5;" data-sd-id="8"></div>
+            </div>
+
+            <!-- Pulsing Heart Backdrop -->
+            <div class="heart-container" id="background-heart">
+                <svg viewBox="0 0 32 32" class="heart-svg w-full h-full">
+                    <path d="M16 28.5L14.1 26.8C7.35 20.65 3 16.7 3 11.85C3 7.85 6.15 4.7 10.15 4.7C12.4 4.7 14.55 5.75 16 7.45C17.45 5.75 19.6 4.7 21.85 4.7C25.85 4.7 29 7.85 29 11.85C29 16.7 24.65 20.65 17.9 26.8L16 28.5Z"></path>
+                </svg>
+            </div>
+
+            <!-- Blood Cell Canvas -->
+            <canvas id="blood-cells-canvas" class="absolute inset-0 w-full h-full" data-sd-id="9"></canvas>
+
+            <!-- Heartbeat Pulse Line -->
+            <div class="ecg-container" data-sd-id="10">
+                <svg width="100%" height="100%" preserveAspectRatio="none" data-sd-id="11">
+                    <path id="ecg-line" d=""></path>
+                    <circle id="ecg-marker" class="pulse-marker" r="4" cx="-20" cy="50"></circle>
+                </svg>
+            </div>
+
+            <div class="vignette" data-sd-id="12"></div>
+            <div class="grain" data-sd-id="13"></div>
+        </div>
+        <!-- BACKGROUND COMPONENT END -->
+
+        <!-- NAV -->
+        <nav class="w-full flex justify-center py-8 z-10" data-sd-id="14">
+            <div class="glass-pill px-6 py-2 rounded-full flex items-center space-x-8 text-sm font-medium tracking-wide" data-sd-id="15">
+                <a href="#" id="nav-home" class="text-white hover:opacity-80 transition-opacity" data-sd-id="16">Home</a>
+                <a href="#" id="nav-network" class="hover:text-white transition-colors" data-sd-id="17">The Network</a>
+                <div class="h-4 w-px bg-white/10" data-sd-id="18"></div>
+                <a href="#" id="nav-emergency" class="flex items-center text-red-400 gap-1.5" data-sd-id="19">
+                    <iconify-icon icon="lucide:alert-circle"></iconify-icon>
+                    Emergency
+                </a>
+                <a href="#" id="nav-login" class="hover:text-white transition-colors" data-sd-id="20">Sign In</a>
+            </div>
+        </nav>
+
+        <!-- HERO CONTENT -->
+        <main class="flex-1 flex flex-col items-center justify-center px-6 text-center z-10" data-sd-id="21">
+            <div class="mb-6 flex items-center gap-2 glass-pill px-4 py-1 rounded-full border-teal-500/20" data-sd-id="22">
+                <span class="flex h-2 w-2 rounded-full bg-[#0E9F8E]" data-sd-id="23"></span>
+                <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-[#0E9F8E]" data-sd-id="24">Verified donors • Authorised blood banks</span>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center gap-4" data-sd-id="28">
+                <a href="#" id="cta-find" class="btn-primary text-white px-10 py-4 rounded-xl font-bold flex items-center gap-2 group w-full sm:w-auto" data-sd-id="29">
+                    Find a Donor
+                    <iconify-icon icon="lucide:search" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                </a>
+                <a href="#" id="cta-become" class="btn-glass text-white px-10 py-4 rounded-xl font-bold w-full sm:w-auto" data-sd-id="30">
+                    Become a Donor
+                </a>
+            </div>
+
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-24 opacity-60 grayscale hover:grayscale-0 transition-all duration-700" data-sd-id="31">
+                <div class="flex flex-col items-center" data-sd-id="32"></div>
+                <div class="flex flex-col items-center" data-sd-id="35"></div>
+                <div class="flex flex-col items-center hidden md:flex" data-sd-id="38"></div>
+            </div>
+        </main>
+
+        <!-- FOOTER STATUS -->
+        <footer class="w-full p-8 z-10 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-[0.2em] opacity-40" data-sd-id="41">
+            <div data-sd-id="42">© 2024 BLOODLINK TECHNOLOGIES. ALL RIGHTS RESERVED.</div>
+            <div class="flex gap-6 mt-4 md:mt-0" data-sd-id="43">
+                <a href="#" id="f-privacy" data-sd-id="44">Privacy Policy</a>
+                <a href="#" id="f-terms" data-sd-id="45">Terms of Service</a>
+                <a href="#" id="f-legal" data-sd-id="46">Medical Disclosure</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const CONFIG = {
+            CELLCOUNT: window.innerWidth < 768 ? 18 : 38,
+            SPEED: 0.6,
+            GLOW_INTENSITY: 0.4,
+            PULSE_INTERVAL: 4000,
+            CELL_SIZE_RANGE: [15, 45],
+            PARALLAX_STRENGTH: 12
+        };
+
+        const canvas = document.getElementById('blood-cells-canvas');
+        const ctx = canvas.getContext('2d', { alpha: true });
+        const ecgPath = document.getElementById('ecg-line');
+        const ecgMarker = document.getElementById('ecg-marker');
+        const bgContainer = document.getElementById('bloodlink-background');
+        
+        let width, height, dpr;
+        let cells = [];
+        let mouse = { x: 0, y: 0 };
+        let targetMouse = { x: 0, y: 0 };
+        let lastPulseTime = 0;
+        let isVisible = true;
+
+        class BloodCell {
+            constructor() {
+                this.reset();
+                this.x = Math.random() * width;
+            }
+
+            reset() {
+                this.z = Math.random();
+                this.size = CONFIG.CELL_SIZE_RANGE[0] + (this.z * (CONFIG.CELL_SIZE_RANGE[1] - CONFIG.CELL_SIZE_RANGE[0]));
+                this.x = -this.size * 2;
+                this.y = Math.random() * height;
+                this.vx = (0.5 + Math.random() * 1.5) * CONFIG.SPEED * (0.5 + this.z);
+                this.vy = (Math.random() - 0.5) * 0.2;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.vRot = (Math.random() - 0.5) * 0.01;
+                this.opacity = 0.1 + (this.z * 0.6);
+                this.blur = (1 - this.z) * 4;
+                this.pulseEffect = 0;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy + Math.sin(Date.now() * 0.001 + this.x * 0.01) * 0.2;
+                this.rotation += this.vRot;
+
+                const dx = this.x - mouse.x;
+                const dy = this.y - mouse.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 150) {
+                    const angle = Math.atan2(dy, dx);
+                    const force = (150 - dist) * 0.02;
+                    this.x += Math.cos(angle) * force;
+                    this.y += Math.sin(angle) * force;
+                }
+
+                if (this.pulseEffect > 0) this.pulseEffect *= 0.95;
+
+                if (this.x > width + this.size * 2) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = this.opacity + this.pulseEffect;
+                
+                if (this.blur > 1) {
+                    ctx.filter = `blur(${this.blur}px)`;
+                }
+
+                const s = this.size;
+                
+                const gradient = ctx.createRadialGradient(0, 0, s * 0.1, 0, 0, s);
+                gradient.addColorStop(0, '#5A0A18');
+                gradient.addColorStop(0.7, '#C8102E');
+                gradient.addColorStop(1, '#120709');
+                
+                ctx.beginPath();
+                ctx.ellipse(0, 0, s, s * 0.8, 0, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.ellipse(0, 0, s, s * 0.8, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255, 107, 107, 0.2)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.ellipse(0, 0, s * 0.4, s * 0.3, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(18, 7, 9, 0.4)';
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        function init() {
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            resize();
+            
+            cells = [];
+            for (let i = 0; i < CONFIG.CELLCOUNT; i++) {
+                cells.push(new BloodCell());
+            }
+
+            window.addEventListener('resize', resize);
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('bloodlink:pulse', triggerPulse);
+
+            requestAnimationFrame(animate);
+            setTimeout(triggerPulse, 500);
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+        }
+
+        function handleMouseMove(e) {
+            targetMouse.x = e.clientX;
+            targetMouse.y = e.clientY;
+        }
+
+        function triggerPulse() {
+            lastPulseTime = Date.now();
+            cells.forEach(c => {
+                const dx = c.x - width / 2;
+                const dy = c.y - height / 2;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 400) {
+                    c.pulseEffect = 0.4 * (1 - dist / 400);
+                }
+            });
+            animateECG();
+            
+            const heart = document.getElementById('background-heart');
+            if (heart) {
+                heart.classList.add('heart-pulse');
+                setTimeout(() => heart.classList.remove('heart-pulse'), 1200);
+            }
+        }
+
+        function animateECG() {
+            const baseline = 50;
+            let points = [];
+            const segmentWidth = width / 100;
+            
+            for (let i = 0; i <= 100; i++) {
+                let x = i * segmentWidth;
+                let y = baseline;
+                points.push(`${x},${y}`);
+            }
+
+            ecgPath.setAttribute('d', `M ${points.join(' L ')}`);
+            
+            let progress = 0;
+            const duration = 1200;
+            const start = Date.now();
+
+            function step() {
+                const now = Date.now();
+                const p = (now - start) / duration;
+                if (p > 1) return;
+
+                const currentX = p * width;
+                const peakX = currentX;
+                
+                let pathD = `M 0,${baseline} `;
+                for (let i = 1; i <= 100; i++) {
+                    let x = i * (width / 100);
+                    let dist = Math.abs(x - peakX);
+                    let y = baseline;
+                    
+                    if (dist < 40) {
+                        if (dist < 10) y -= 40;
+                        else if (dist < 20) y += 15;
+                        else y -= 5;
+                    }
+                    pathD += `L ${x},${y} `;
+                }
+                
+                ecgPath.setAttribute('d', pathD);
+                ecgMarker.setAttribute('cx', peakX);
+                ecgMarker.setAttribute('cy', baseline);
+
+                requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        function animate() {
+            if (!isVisible) return;
+
+            ctx.clearRect(0, 0, width, height);
+
+            mouse.x += (targetMouse.x - mouse.x) * 0.05;
+            mouse.y += (targetMouse.y - mouse.y) * 0.05;
+
+            if (width >= 768) {
+                const px = (mouse.x / width - 0.5) * CONFIG.PARALLAX_STRENGTH;
+                const py = (mouse.y / height - 0.5) * CONFIG.PARALLAX_STRENGTH;
+                document.querySelectorAll('.aurora-bloom').forEach(el => {
+                    el.style.transform = `translate(${px}px, ${py}px)`;
+                });
+            }
+
+            cells.forEach(cell => {
+                cell.update();
+                cell.draw();
+            });
+
+            if (Date.now() - lastPulseTime > CONFIG.PULSE_INTERVAL) {
+                triggerPulse();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            isVisible = entries[0].isIntersecting;
+            if (isVisible) animate();
+        });
+        observer.observe(bgContainer);
+
+        document.addEventListener('visibilitychange', () => {
+            isVisible = document.visibilityState === 'visible';
+            if (isVisible) animate();
+        });
+
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            init();
+        }
+    </script>
+</body></html>
